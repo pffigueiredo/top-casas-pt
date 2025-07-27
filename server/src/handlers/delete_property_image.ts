@@ -1,7 +1,18 @@
 
+import { db } from '../db';
+import { propertyImagesTable } from '../db/schema';
+import { eq } from 'drizzle-orm';
+
 export const deletePropertyImage = async (id: number): Promise<boolean> => {
-    // This is a placeholder declaration! Real code should be implemented here.
-    // The goal of this handler is deleting a property image from the database.
-    // Returns true if deletion was successful, false if image was not found.
-    return Promise.resolve(false);
+  try {
+    const result = await db.delete(propertyImagesTable)
+      .where(eq(propertyImagesTable.id, id))
+      .returning()
+      .execute();
+
+    return result.length > 0;
+  } catch (error) {
+    console.error('Property image deletion failed:', error);
+    throw error;
+  }
 };
